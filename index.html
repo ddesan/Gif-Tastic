@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GifTastic</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="row">
+            <h1>GifTastic!</h1>
+        </div>
+
+        <div class="row">
+            <div id="buttons"></div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-8">
+                <div id="topics-data"></div>
+            </div>
+
+            <div class="col-4" style="background-color:green">
+                <form>
+
+                    <div class="form-group">
+                        <label for="user-form">Add an Universe topic:</label>
+                        <input type="string" class="form-control" id="user-input"
+                            placeholder="Enter the first thing the Universe sends you">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+        //Create an array with all the topics for the buttons
+
+        var topics = ["Moon", "Sun", "Jupiter", "Galaxy", "Black hole", "Acuarius", "Scorpion", "Cancer", "Capricorn", "Mars", "Neptune"];
+
+        var topicDiv;
+
+        //Create a function with a loop to append a button to the html for each index of the array
+
+        renderButtons();
+
+        displayTopics ();
+
+        function renderButtons() {
+
+            $("#buttons").empty();
+
+            for (var i = 0; i < topics.length; i++) {
+
+                var a = $("<button>");
+
+                a.addClass("btn btn-info");
+
+                a.attr("type", "button");
+
+                a.attr("data-name", topics[i]);
+
+                a.text(topics[i]);
+
+                $("#buttons").append(a);
+            }
+        }
+
+        //Click function for the buttons to ajax a lenght of 10 non-animated gifs and place on page
+
+        function displayTopics() {
+
+            $("button").on("click", function () {
+
+                var topic = $(this).attr("data-name");
+
+                var APIkey = "q3aNc9Fl4mhX6692itDp5svFpkwMC33t";
+
+                var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=" + APIkey + "&q=" + topic + "&limit=10";
+
+                console.log(topic);
+
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                }).then(function (response) {
+
+                    var results = response.data;
+
+                    console.log(results);
+                    console.log(queryURL);
+
+                    for (var e = 0; e < results.length; e++) {
+
+                        var topicDiv = $("<div>");
+
+                        // Rating data from JSON to HTML
+                        var rating = results[e].rating;
+
+                        var rate = $("<p>").text("Rating: " + rating);
+
+                        console.log(rate);
+
+                        // Image data from JSON to HTML
+                        var imgURL = $("<img>");
+
+                        imgURL.attr("src", results[e].images.fixed_height.url);
+
+                        console.log(imgURL);
+
+                        // Appending the image
+                        topicDiv.append(rate);
+                        topicDiv.append(imgURL);
+
+                        console.log(topicDiv);
+
+                    }
+            
+                })
+
+                $("#topics-data").prepend(topicDiv);
+
+            })
+        }
+
+        // Putting the entire movie above the previous movies
+        
+
+        //Animate each gif by clicking on it and vice versa
+
+        //Ajax for each gif the rating and show it under each
+
+        //Creat input form so user can fill it with keywords
+
+    </script>
+
+</body>
+
+</html>
